@@ -8,7 +8,7 @@ import sys
 import os
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-src_path = os.path.abspath(os.path.join(current_dir, '..'))
+root_dir = os.path.abspath(os.path.join(current_dir, '..'))
 # Get the Src folder (For imports)
 src_dir = os.path.join(root_dir, 'src')
 sys.path.append(src_path)
