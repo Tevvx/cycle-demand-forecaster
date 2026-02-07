@@ -19,9 +19,9 @@ import joblib
 from sklearn.metrics import mean_squared_error
 from prep import prepare_data  
 
-MODEL_PATH = os.path.join(root_dir, 'bike_rental_pipeline.joblib')
-DATA_PATH = os.path.join(root_dir, 'day_2011.csv')
-TRANSFORMER_PATH = os.path.join(root_dir, 'yeo_johnson_hum_transformer.joblib')
+MODEL_PATH = os.path.join(root_dir, 'models', 'bike_rental_pipeline.joblib')
+DATA_PATH = os.path.join(root_dir, 'data', 'day_2011.csv')
+TRANSFORMER_PATH = os.path.join(root_dir, 'models', 'yeo_johnson_hum_transformer.joblib')
 
 def test_model_quality():
     print("\n" + "="*70)
