@@ -8,7 +8,9 @@ import sys
 import os
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-src_path = os.path.abspath(os.path.join(current_dir, '../src'))
+src_path = os.path.abspath(os.path.join(current_dir, '..'))
+# Get the Src folder (For imports)
+src_dir = os.path.join(root_dir, 'src')
 sys.path.append(src_path)
 
 import pandas as pd
@@ -17,6 +19,10 @@ import joblib
 from sklearn.metrics import mean_squared_error
 from prep import prepare_data  
 
+MODEL_PATH = os.path.join(root_dir, 'bike_rental_pipeline.joblib')
+DATA_PATH = os.path.join(root_dir, 'day_2011.csv')
+TRANSFORMER_PATH = os.path.join(root_dir, 'yeo_johnson_hum_transformer.joblib')
+
 def test_model_quality():
     print("\n" + "="*70)
     print("🔍 RUNNING QUALITY GATE CHECK")
@@ -24,26 +30,31 @@ def test_model_quality():
     
     # 1. LOAD MODEL
     try:
-        
-        model = joblib.load('bike_rental_pipeline.joblib')
+        print(f"📂 Loading model from: {MODEL_PATH}")
+        model = joblib.load(MODEL_PATH)
         print("✅ Model loaded successfully")
     except FileNotFoundError:
-        print("❌ ERROR: Model file not found!")
+        print(f"❌ ERROR: Model file not found at {MODEL_PATH}")
         sys.exit(1)
     
     # 2. LOAD DATA
     try:
-        
-        df = pd.read_csv('day_2011.csv')
+        print(f"📂 Loading data from: {DATA_PATH}")
+        df = pd.read_csv(DATA_PATH)
         print(f"✅ Raw data loaded: {len(df)} rows")
     except FileNotFoundError:
-        print("❌ ERROR: Data file not found!")
+        print(f"❌ ERROR: Data file not found at {DATA_PATH}")
         sys.exit(1)
 
     # 3. PREPARE DATA 
     print("⚙️ Processing data...")
     # This adds month_sin, windspeed_log, caps outliers, etc.
-    df_clean = prepare_data(df, pt_hum_path='yeo_johnson_hum_transformer.joblib')
+    try:
+        # Pass the absolute path to the transformer
+        df_clean = prepare_data(df, pt_hum_path=TRANSFORMER_PATH)
+    except Exception as e:
+        print(f"❌ ERROR during data preparation: {e}")
+        sys.exit(1)
     
     # Filter to exact features expected by the model
     features_required = [
@@ -51,6 +62,11 @@ def test_model_quality():
         'season', 'holiday', 'workingday', 'weathersit',
         'month_sin', 'month_cos', 'weekday_sin', 'weekday_cos'
     ]
+
+    missing_cols = [col for col in features_required if col not in df_clean.columns]
+    if missing_cols:
+        print(f"❌ ERROR: Missing columns after prep: {missing_cols}")
+        sys.exit(1)
     
     X = df_clean[features_required]
     y_true = df_clean['cnt']
