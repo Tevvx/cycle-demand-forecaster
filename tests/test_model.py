@@ -7,8 +7,9 @@ and verifies its RMSE meets the threshold.
 import sys
 import os
 
-# Add the project root directory to Python's path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+current_dir = os.path.dirname(os.path.abspath(__file__))
+src_path = os.path.abspath(os.path.join(current_dir, '../src'))
+sys.path.append(src_path)
 
 import pandas as pd
 import numpy as np
