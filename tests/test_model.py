@@ -85,7 +85,7 @@ def test_model_quality():
     
     # 5. QUALITY GATE
     
-    BASELINE_RMSE = 602.23
+    BASELINE_RMSE =  0.8032 #based on the baseline linear reg (RMSE_test)
     
     if rmse <= BASELINE_RMSE:
         print(f"\n✅ QUALITY GATE PASSED!")
