@@ -55,7 +55,12 @@ def test_model_quality():
     except Exception as e:
         print(f"❌ ERROR during data preparation: {e}")
         sys.exit(1)
+
+    split_idx = int(0.8 * len(df_clean))
     
+    # Use ONLY the test portion (days 293-365)
+    df_test = df_clean.iloc[split_idx:]
+
     # Filter to exact features expected by the model
     features_required = [
         'temp', 'hum_transformed', 'windspeed_log', 'day_of_year',
