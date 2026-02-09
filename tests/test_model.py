@@ -73,8 +73,8 @@ def test_model_quality():
         print(f"❌ ERROR: Missing columns after prep: {missing_cols}")
         sys.exit(1)
     
-    X = df_clean[features_required]
-    y_true = df_clean['cnt']
+    X = df_test[features_required]
+    y_true = df_test['cnt']
     print(f"✅ Data processed. Features: {X.shape[1]}")
 
     # 4. PREDICT & EVALUATE
